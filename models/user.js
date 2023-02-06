@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const validEmail = function(value) {
-    return /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value);
+    return /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(value);
 };
 
 const userSchema = new mongoose.Schema({
@@ -32,13 +32,14 @@ const userSchema = new mongoose.Schema({
 {
     toJSON: {
         virtuals: true,
+        getters: true,
     },
     id: false,
 });
 
 userSchema.virtual('friendCount').get(function () {
     return this.friends.length;
-})
+});
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
