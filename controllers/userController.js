@@ -21,5 +21,11 @@ module.exports = {
             return res.status(500).json(err);
         });
     },
+
+    createUser(req, res) {
+        User.create(req.body)
+        .then((users) => res.json(users))
+        .catch((err) => res.status(500).json(err));
+    },
 };
 
