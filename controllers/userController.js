@@ -1,10 +1,10 @@
 const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
-const totalUser = async () =>
+const totalFriends = async () =>
 User.aggregate()
     .count('userCount')
-    .then((numberOfUsers) => numberOfUsers); 
+    .then((numberOfFriends) => numberOfFriends); 
 
 module.exports = {
     getUsers(req, res) {
@@ -12,7 +12,6 @@ module.exports = {
         .then(async (users) => {
             const userObj = {
                 users,
-                totalUser: await totalUser(),
             };
             return res.json(userObj);
         })
@@ -25,6 +24,10 @@ module.exports = {
     getSingleUser(req, res) {
         User.findOne({ _id: req.params.userId })
             .select('-__v')
+            .populate({
+                path: "thoughts",
+                select: "-__v"
+            })
             .then(async (user) => {
                 if(!user) {
                     res.status(404).json({ message: 'No user with that ID' })
@@ -66,6 +69,21 @@ module.exports = {
             res.json(user);
         })
         .catch(err => res.json(err));
+    },
+
+    addFriend(req, res) {
+        User.findOneAndUpdate(
+            { _id: req.params.userId },
+            { $addToSet: {friends: req.paramsfriendId } },
+            { new: true }
+        )
+        .then((newFriend) => {
+            if (!newFriend) {
+                res.status(404).json({ message: "No user with that ID" });
+            }
+            res.json(newFriend);
+        })
+        .catch((err) => res.json(err));
     },
     
 };
