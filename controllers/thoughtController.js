@@ -15,12 +15,15 @@ module.exports = {
         });
     },
 
-    
-
-    createThoughts(req, res) {
-        Thought.findOneAndUpdate(
-            { _id: req.params.userId},
-            {$addToSet: { thoughtText: req.body }},
+    createThoughts: async(req, res) => {
+        let newThought = await Thought.create({
+            thoughtText: req.body.thoughtText,
+            username: req.body.username
+        })
+        let newThoughtId = newThought._id;
+        User.findOneAndUpdate(
+            { username: req.body.username},
+            {$push: { thoughts: newThoughtId }},
             {new: true}
         )
         .then((thoughts) => res.json(thoughts))
