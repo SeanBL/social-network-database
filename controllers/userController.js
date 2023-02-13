@@ -74,7 +74,7 @@ module.exports = {
     addFriend(req, res) {
         User.findOneAndUpdate(
             { _id: req.params.userId },
-            { $addToSet: {friends: req.paramsfriendId } },
+            { $addToSet: {friends: req.params.friendId } },
             { new: true }
         )
         .then((newFriend) => {
