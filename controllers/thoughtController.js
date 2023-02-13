@@ -15,6 +15,19 @@ module.exports = {
         });
     },
 
+    getSingleThought(req, res) {
+        Thought.findOne(
+            { _id: req.params.thoughtId }
+        )
+        .then((thought) => {
+            if (!thought) {
+                res.status(404).json({ message: "No thought with that ID"});
+            }
+            res.json({thought});
+        })
+        .catch((err) => res.status(500).json(err));
+    },
+
     createThoughts: async(req, res) => {
         let newThought = await Thought.create({
             thoughtText: req.body.thoughtText,
@@ -22,7 +35,7 @@ module.exports = {
         })
         let newThoughtId = newThought._id;
         User.findOneAndUpdate(
-            { username: req.body.username},
+            {username: req.body.username},
             {$push: { thoughts: newThoughtId }},
             {new: true}
         )
