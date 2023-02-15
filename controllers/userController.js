@@ -1,10 +1,10 @@
 const { ObjectId } = require('mongoose').Types;
 const { User, Thought } = require('../models');
 
-const totalFriends = async () =>
-User.aggregate()
-    .count('userCount')
-    .then((numberOfFriends) => numberOfFriends); 
+// const totalFriends = async () =>
+// User.aggregate()
+//     .count('userCount')
+//     .then((numberOfFriends) => numberOfFriends); 
 
 module.exports = {
     getUsers(req, res) {
@@ -62,6 +62,9 @@ module.exports = {
         User.findByIdAndDelete(
             { _id: req.params.userId }
         )
+        .then((user) => {
+            return Thought.deleteMany({ _id: { $in: user.thoughts }});
+        })
         .then((user) => {
             if (!user) {
                 res.status(404).json({ message: "No user with that ID" });

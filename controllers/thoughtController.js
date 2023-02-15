@@ -70,4 +70,24 @@ module.exports = {
         })
         .catch(err => res.json(err));
     },
+
+    createReaction(req, res) {
+        Thought.findOneAndUpdate(
+            {_id: req.params.thoughtId},
+            {$push: { reactions: req.body }},
+            {new: true}
+        )
+        .then((reaction) => res.json(reaction))
+        .catch((err) => res.status(500).json(err));
+    },
+
+    deleteReaction(req, res) {
+        Thought.findOneAndUpdate(
+            {_id: req.params.thoughtId},
+            {$pull: { reactions: {reactionId: req.params.reactionId} }},
+            { new: true }
+        )
+        .then((reaction) => res.json(reaction))
+        .catch((err) => res.json(err));
+    },
 };
