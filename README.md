@@ -19,6 +19,7 @@ To properly run this application, clone a copy of the repository from GitHub. In
 ## Usage
 Click on the link below for a video demo on how to use Insomnia to view, create, update, and delete values from each document. 
 
+https://youtu.be/K0M4xUI4yw8
 
 ## License
 MIT License
